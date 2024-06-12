@@ -7,8 +7,11 @@ import admin from '../models/admin.model.js';
 
 export const registroAdmin= async (req, res)=>{
    const {administrador,emailAdmin,claveAdmin}= req.body;
-
    try{
+
+      const userFound= await User.findOne({emailAdmin});//usuario encontrado
+      if(userFound) return res.status(400).json(["Ya esta registrado"]);
+   
    const claveEncriptadaa= await bcrypt.hash(claveAdmin, 10);//hash es string aleatorio, nos va a dar una contraseña encrptada con esos string aleatorios
  const nuevoAdmin= new admin(
        {

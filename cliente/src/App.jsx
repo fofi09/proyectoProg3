@@ -1,11 +1,14 @@
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 
-import RegistroPag from './paginas/registroPag'
+import {AuthProvider} from './contexto/validarContexto'
+
+import RegistroPag from './paginas/registroPag'//no seria clinica?
 import LoginPag from './paginas/loginPag'
 import RegistroAdmin from './paginas/registroAdmin'
 function app(){
   return(
-    <BrowserRouter>
+    <AuthProvider>
+        <BrowserRouter>
     <Routes>
     <Route path='/' element={<h1>pagina principal</h1>}></Route>
     <Route path='/RegistroAdmin' element={<RegistroAdmin/>}></Route> 
@@ -18,6 +21,8 @@ function app(){
     <Route path='/perfil' element={<h1>perfil</h1>}></Route>
     </Routes>
     </BrowserRouter>
+    </AuthProvider>
+  
   )
 }
 export default app

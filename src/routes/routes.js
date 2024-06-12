@@ -2,12 +2,15 @@ import {Router} from 'express';
 import {loginUsuario, registroAdmin, loginAdmin, registroUsuario, cerrarSesion,perfil,} from '../controllers/controller.js';
 
 import {autentocacionRequerida} from '../rutasProtegidas/validarToken.js'
+import { validarSchema } from '../rutasProtegidas/validarRutas.js';
+import { validarRegAdmin, validarLoginAdmin } from '../validaciones/autenticar.js';
+
 const router= Router();
 
-router.post('/registroAdmin', registroAdmin);//register
+router.post('/registroAdmin', validarSchema(validarRegAdmin), registroAdmin);//register
 router.post('/registroUsuario', autentocacionRequerida, registroUsuario);//yo le agrego 
 router.post('/loginUsuario', loginUsuario);
-router.post('/loginAdmin', loginAdmin);
+router.post('/loginAdmin', validarSchema(validarLoginAdmin), loginAdmin);
 
 router.post('/cerrarSesion', cerrarSesion);
 

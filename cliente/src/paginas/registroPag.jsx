@@ -7,6 +7,7 @@ function RegistroPag(){
             <form onSubmit={handleSubmit((values)=>{
                 console.log(values);
             } )}>
+                {/* en vez de name=nombre con la libreria hook hago asi */}
             <input type="text" {...RegistroPag("nombre", { required:true})}/>
             <input type="text" {...RegistroPag("apellido", { required:true})}/>
             <input type="text" {...RegistroPag("familiar", { required:true})}/>
