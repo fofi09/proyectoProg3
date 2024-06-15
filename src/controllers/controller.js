@@ -8,11 +8,14 @@ import Secretaria from '../models/secretarias.model.js'
 
 export const registroAdmin= async (req, res)=>{
    const {administrador,emailAdmin,claveAdmin}= req.body;
-   try{
+ 
+   try {
+      // Verificar si la secretaria ya está registrada
+      const AdministradorExistente = await admin.findOne({ emailAdmin});
+      if (AdministradorExistente) {
+          return res.status(400).json(["El administrador ya existe" ]);
+      }
 
-      const userFound= await User.findOne({emailAdmin});//usuario encontrado
-      if(userFound) return res.status(400).json(["Ya esta registrado"]);
-   
    const claveEncriptadaa= await bcrypt.hash(claveAdmin, 10);//hash es string aleatorio, nos va a dar una contraseña encrptada con esos string aleatorios
  const nuevoAdmin= new admin(
        {
@@ -172,7 +175,7 @@ export const perfil= async(req,res)=> //va a recibir un req y un res
           // Verificar si la secretaria ya está registrada
           const secretariaEncontrada = await Secretaria.findOne({ emailSecretaria });
           if (secretariaEncontrada) {
-              return res.status(400).json({ message: "La secretaria ya está registrada" });
+              return res.status(400).json(["La secretaria ya está registrada" ]);
           }
   
           // Encriptar la contraseña

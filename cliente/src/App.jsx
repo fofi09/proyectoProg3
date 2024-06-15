@@ -7,6 +7,7 @@ import LoginPag from './paginas/loginPag'
 import RegistroAdmin from './paginas/registroAdmin'
 
 import RegistroSecretarias from './paginas/registroSecretarias';
+import LoginSecretarias from './paginas/loginSecretaria'
 function app(){
   return(
     <AuthProvider>
@@ -18,6 +19,7 @@ function app(){
     <Route path='/RegistroUsuario' element={<RegistroPag/>}></Route> 
     <Route path='/loginUsuario' element={<LoginPag/>}></Route>
     <Route path='/RegistroSecretarias' element={<RegistroSecretarias />} ></Route> {/* Ruta para registro de secretarias */}
+    <Route path='/loginSecretarias' element={<LoginSecretarias/>}></Route>
     <Route path='/historial' element={<h1>historial</h1>}></Route>
     <Route path='/agregarHistorial' element={<h1>agregar historil</h1>}></Route>
     <Route path='/historial/:id' element={<h1>actualizar historial</h1>}></Route>
