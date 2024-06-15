@@ -4,6 +4,7 @@ import { createAccessToken } from "../libs/jwt.js";
 
 
 import admin from '../models/admin.model.js';
+import Secretaria from '../models/secretarias.model.js'
 
 export const registroAdmin= async (req, res)=>{
    const {administrador,emailAdmin,claveAdmin}= req.body;
@@ -63,7 +64,7 @@ export const registroAdmin= async (req, res)=>{
            administrador: adminEncontrado.administrador,
            emailAdmin: adminEncontrado.emailAdmin
         });
-        res.redirect('/registroUsuario'); 
+      res.redirect('/registroUsuario'); 
        }
        catch(error){
           console.log("Administrador no encontrado");
@@ -161,3 +162,75 @@ export const perfil= async(req,res)=> //va a recibir un req y un res
          updatedAt: usuarioEncontrado.updatedAt,
       })
    };
+
+
+   //////////////////////////////////////////////////////////////////////
+   export const registroSecretarias = async (req, res) => {
+      const { nombreSecretaria, emailSecretaria, claveSecretaria } = req.body;
+  
+      try {
+          // Verificar si la secretaria ya está registrada
+          const secretariaEncontrada = await Secretaria.findOne({ emailSecretaria });
+          if (secretariaEncontrada) {
+              return res.status(400).json({ message: "La secretaria ya está registrada" });
+          }
+  
+          // Encriptar la contraseña
+          const claveEncriptada = await bcrypt.hash(claveSecretaria, 10);
+  
+          // Crear nueva instancia de Secretaria
+          const nuevaSecretaria = new Secretaria({
+              nombreSecretaria,
+              emailSecretaria,
+              claveSecretaria: claveEncriptada
+          });
+  
+          // Guardar la secretaria en la base de datos
+          const secretariaGuardada = await nuevaSecretaria.save();
+  
+          // Crear y enviar token de acceso
+          const token = createAccessToken({ id: secretariaGuardada._id });
+  
+          // Enviar respuesta
+          res.cookie('token', token);
+          res.json({
+              id: secretariaGuardada._id,
+              nombreSecretaria: secretariaGuardada.nombreSecretaria,
+              emailSecretaria: secretariaGuardada.emailSecretaria,
+              createdAt: secretariaGuardada.createdAt,
+              updatedAt: secretariaGuardada.updatedAt,
+          });
+      } catch (error) {
+          res.status(500).json({ message: error.message });
+      }
+  };
+  export const loginSecretarias = async (req, res) => {
+      const { emailSecretaria, claveSecretaria } = req.body;
+  
+      try {
+          const secretariaEncontrada = await Secretaria.findOne({ emailSecretaria });
+  
+          if (!secretariaEncontrada) {
+              return res.status(400).json({ message: "Secretaria no encontrada" });
+          }
+  
+          const comparar = await bcrypt.compare(claveSecretaria, secretariaEncontrada.claveSecretaria);
+  
+          if (!comparar) {
+              return res.status(400).json({ message: "Contraseña incorrecta" });
+          }
+  
+          const token = await createAccessToken({ id: secretariaEncontrada._id });
+  
+          res.cookie('token', token);
+          res.json({
+              id: secretariaEncontrada._id,
+              nombreSecretaria: secretariaEncontrada.nombreSecretaria,
+              emailSecretaria: secretariaEncontrada.emailSecretaria,
+              createdAt: secretariaEncontrada.createdAt,
+              updatedAt: secretariaEncontrada.updatedAt,
+          });
+      } catch (error) {
+          res.status(500).json({ message: error.message });
+      }
+  };

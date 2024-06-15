@@ -30,7 +30,10 @@ function RegistroAdmin(){
             onSubmit={onSubmit}
             >
             <input type="text" 
-            {...register("administrador", { required:true})}/>
+            {...register("administrador", { required:true})}
+            
+            />
+
            
             <input type="email" 
             {...register("emailAdmin", { required:true})}/>

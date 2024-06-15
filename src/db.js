@@ -35,4 +35,4 @@ console.log("conectado a mongoDB");
 //     "estadoAnimo":"feliz",
 //     "actividades":"terapia grupal",
 //     "observaciones":"mejor comportamiento"
-//    }
+//    }       

@@ -28,3 +28,35 @@ export const validarLoginAdmin=z.object({
         message: "Contraseña invalida",
     }),
 });
+
+///////////////////////////////////////
+
+
+export const validarRegSecretaria = z.object({
+    nombreSecretaria: z.string({
+        required_error: 'El nombre de la secretaria es obligatorio'
+    }),
+    emailSecretaria: z.string({
+        required_error: 'El email es obligatorio'
+    }).email({
+        message: 'Email inválido'
+    }),
+    claveSecretaria: z.string({
+        required_error: 'Debe ingresar una contraseña'
+    }).min(6, {
+        message: "La contraseña debe tener al menos 6 caracteres"
+    }),
+});
+
+export const validarLoginSecretaria = z.object({
+    emailSecretaria: z.string({
+        required_error: "Debe ingresar su email"
+    }).email({
+        message: "Email incorrecto"
+    }),
+    claveSecretaria: z.string({
+        required_error: "Debe ingresar su contraseña"
+    }).min(6, {
+        message: "Contraseña inválida"
+    }),
+});
