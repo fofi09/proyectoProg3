@@ -3,14 +3,16 @@ import {loginUsuario, registroAdmin, loginAdmin, registroUsuario,registroSecreta
 
 import {autentocacionRequerida} from '../rutasProtegidas/validarToken.js'
 import { validarSchema } from '../rutasProtegidas/validarRutas.js';
-import { validarRegAdmin, validarLoginAdmin, validarRegSecretaria, validarLoginSecretaria, } from '../validaciones/autenticar.js';
+import { validarRegAdmin, validarLoginAdmin, validarRegSecretaria, validarLoginSecretaria, validarRegFamiliar, validarLoginFamiliar,} from '../validaciones/autenticar.js';
 
 
 const router= Router();
 
 router.post('/registroAdmin', validarSchema(validarRegAdmin), registroAdmin);//register
-router.post('/registroUsuario', autentocacionRequerida, registroUsuario);//yo le agrego 
-router.post('/loginUsuario', loginUsuario);
+//////////////////////////////
+router.post('/registroFamiliar', validarSchema(validarRegFamiliar), registroUsuario);//yo le agrego
+////////////////////////////////// 
+router.post('/loginFamiliar',validarSchema(validarLoginFamiliar), loginUsuario);
 router.post('/loginAdmin', validarSchema(validarLoginAdmin), loginAdmin);
 
 router.post('/registroSecretarias', validarSchema(validarRegSecretaria), registroSecretarias);

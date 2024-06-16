@@ -5,3 +5,5 @@ export const registroA=user => axios.post(`${API}/registroAdmin`, user);
 export const registroSecretarias = user => axios.post(`${API}/registroSecretarias`, user);
 
 export const loginSecretari= user => axios.post(`${API}/loginSecretarias`, user);
+
+export const registroFamiliares = user => axios.post(`${API}/registroFamiliar`, user);

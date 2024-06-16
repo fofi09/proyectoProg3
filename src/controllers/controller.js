@@ -79,6 +79,11 @@ export const registroUsuario= async (req, res)=>{
     const {nombre,apellido,familiar,email, claveSegura}= req.body;
 
     try{
+      const familiarRegistrado = await User.findOne({email});
+      if (familiarRegistrado) {
+          return res.status(400).json(["La secretaria ya está registrada"]);
+      }
+
     const claveEncriptada= await bcrypt.hash(claveSegura, 10);//hash es string aleatorio, nos va a dar una contraseña encrptada con esos string aleatorios
   const nuevoUsuario= new User(
         {

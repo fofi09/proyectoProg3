@@ -1,7 +1,7 @@
 //authContext.jsx
 import {createContext, useState, useContext } from "react"; 
 //createContext es una funcion GLOBAL de react no le cambies el nombre 
-import {registroA, registroSecretarias, loginSecretari} from '../api/autenticacion'
+import {registroA, registroSecretarias, loginSecretari, registroFamiliares} from '../api/autenticacion'
 
 export const ValidarContexto= createContext();
 
@@ -55,11 +55,26 @@ export const AuthProvider= ({children}) =>{
             console.log(error);
         }
     }
+
+    const signupFamiliar = async (user) => {
+        try {
+            const res = await registroFamiliares(user); // Llama a la función registroSecretarias del archivo api/autenticacion.js
+            console.log(res.data); // Verifica si res.data está definido
+            setUser(res.data);
+            setAutenticado(true);
+        } catch (error) {
+            // Manejo de errores
+            // console.error('Error al registrar secretaria:', error);
+            setErrors(error.response.data); // Asigna los errores desde la respuesta
+        }
+    };
+
     return(
         <ValidarContexto.Provider value={{
             signup,
             signupSecretaria,
             sesionSecretaria,
+            signupFamiliar,
             user,
             autenticado,
             errors

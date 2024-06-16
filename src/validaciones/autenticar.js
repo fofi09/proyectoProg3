@@ -60,3 +60,37 @@ export const validarLoginSecretaria = z.object({
         message: "Contraseña inválida"
     }),
 });
+
+
+//////////////////////////////////
+export const validarRegFamiliar = z.object({
+    nombre: z.string({
+        required_error: 'El nombre de la secretaria es obligatorio'
+    }),
+    apellido: z.string({
+        required_error: 'El apellido de la secretaria es obligatorio'
+    }),
+    email: z.string({
+        required_error: 'El email es obligatorio'
+    }).email({
+        message: 'Email inválido'
+    }),
+    claveSegura: z.string({
+        required_error: 'Debe ingresar una contraseña'
+    }).min(6, {
+        message: "La contraseña debe tener al menos 6 caracteres"
+    }),
+});
+
+export const validarLoginFamiliar = z.object({
+    email: z.string({
+        required_error: "Debe ingresar su email"
+    }).email({
+        message: "Email incorrecto"
+    }),
+    claveSegura: z.string({
+        required_error: "Debe ingresar su contraseña"
+    }).min(6, {
+        message: "Contraseña inválida"
+    }),
+});
