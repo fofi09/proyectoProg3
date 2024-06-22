@@ -1,9 +1,10 @@
 import {Router} from 'express';
-import {loginUsuario, registroAdmin, loginAdmin, registroUsuario,registroSecretarias, loginSecretarias, cerrarSesion,perfil,} from '../controllers/controller.js';
+import {loginUsuario, registroAdmin, loginAdmin, registroUsuario,registroSecretarias, loginSecretarias, cerrarSesion,perfil,verifyToken,} from '../controllers/controller.js';
 
 import {autentocacionRequerida} from '../rutasProtegidas/validarToken.js'
 import { validarSchema } from '../rutasProtegidas/validarRutas.js';
 import { validarRegAdmin, validarLoginAdmin, validarRegSecretaria, validarLoginSecretaria, validarRegFamiliar, validarLoginFamiliar,} from '../validaciones/autenticar.js';
+
 
 
 const router= Router();
@@ -22,6 +23,8 @@ router.post('/loginSecretaria', validarSchema(validarLoginSecretaria), loginSecr
 /////////////////////////////////////
 
 router.post('/cerrarSesion', cerrarSesion);
+
+router.get('/verify', verifyToken); 
 
 router.get('/perfil', autentocacionRequerida, perfil); //profile
 //aqui antes de entrar y asi en perfil aqui se ejecuta (req, res, NEXT)

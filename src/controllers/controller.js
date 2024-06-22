@@ -1,6 +1,8 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import { createAccessToken } from "../libs/jwt.js";
+import jwt from 'jsonwebtoken'
+import { TOKEN_SECRETO } from "../config.js";
 
 
 import admin from '../models/admin.model.js';
@@ -160,7 +162,7 @@ export const perfil= async(req,res)=> //va a recibir un req y un res
      const usuarioEncontrado=await User.findById(req.user.id)//usuario
      //si no hay ningun usuario, osea si no se lo encuentra
      if(!usuarioEncontrado) return res.status(400).json({ message:"Usuario no encontrado"})
-     
+     //aqui no seria .nombreSecreaia
       return res.json({
          id: usuarioEncontrado._id,
          nombre: usuarioEncontrado.nombre,
@@ -242,3 +244,24 @@ export const perfil= async(req,res)=> //va a recibir un req y un res
           res.status(500).json({ message: error.message });
       }
   };
+
+  export const verifyToken= async(req,res)=>{
+    
+        const {token} = req.cookies
+
+        if(!token) return res.status(401).json({message:"No autorizado"});
+
+        jwt.verify(token, TOKEN_SECRETO, async (err, user)=>{
+            if(err) return res.status(401).json({message:"No autorizado"});
+
+           const userFound= await User.findById(user.id)
+           if(!userFound) return res.status(401).json({message:"No autorizado"});
+
+            return res.json({
+                id: userFound._id,
+                nombre: userFound.nombreSecretaria,
+                email: userFound.emailSecretaria,
+            })
+        })
+    }
+  

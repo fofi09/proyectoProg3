@@ -1,6 +1,8 @@
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 
 import {AuthProvider} from './contexto/validarContexto'
+import Contacto from './contacto'; // Importa el componente Contacto
+import Servicios from './servicio'; 
 
 //import RegistroPag from './paginas/registroPag'//no seria clinica?
 import LoginPag from './paginas/loginPag'
@@ -9,11 +11,20 @@ import RegistroAdmin from './paginas/registroAdmin'
 import RegistroSecretarias from './paginas/registroSecretarias';
 import LoginSecretarias from './paginas/loginSecretaria'
 
+import FormularioHistorial from './paginas/historialClinico';
+import Perfil from './paginas/perfil'
 import RegistroFamiliar from './paginas/regFamiliarDirecto'; 
+import Menu from './componentes/menu';
+import HistorialClinico from './paginas/historial';
+import { HistorialProvide } from './contexto/historialContexto';
+import ProtegerRutas from './protegerRutas';
+
 function app(){
-  return(
+  return( 
     <AuthProvider>
+      <HistorialProvide>
         <BrowserRouter>
+        <Menu/>
     <Routes>
     <Route path='/' element={<h1>pagina principal</h1>}></Route>
     <Route path='/RegistroAdmin' element={<RegistroAdmin/>}></Route> 
@@ -24,12 +35,20 @@ function app(){
     <Route path='/loginUsuario' element={<LoginPag/>}></Route>
     <Route path='/RegistroSecretarias' element={<RegistroSecretarias />} ></Route> {/* Ruta para registro de secretarias */}
     <Route path='/loginSecretarias' element={<LoginSecretarias/>}></Route>
-    <Route path='/historial' element={<h1>historial</h1>}></Route>
-    <Route path='/agregarHistorial' element={<h1>agregar historil</h1>}></Route>
-    <Route path='/historial/:id' element={<h1>actualizar historial</h1>}></Route>
-    <Route path='/perfil' element={<h1>perfil</h1>}></Route>
+
+
+    <Route element={<ProtegerRutas/>}>
+    <Route path='/historial' element={<HistorialClinico/>}></Route>
+    <Route path='/agregarhistorial' element={<FormularioHistorial/>}></Route>
+    <Route path='/historial/:id' element={<FormularioHistorial/>}></Route>
+    <Route path='/perfil' element={<Perfil/>}></Route>
+    <Route path="/contacto" element={<Contacto />} ></Route>
+    <Route path="/servicios" element={<Servicios />} ></Route>
+    </Route>
+    
     </Routes>
     </BrowserRouter>
+    </HistorialProvide>
     </AuthProvider>
   
   )

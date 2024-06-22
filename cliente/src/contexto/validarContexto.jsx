@@ -1,7 +1,8 @@
 //authContext.jsx
-import {createContext, useState, useContext } from "react"; 
+import {createContext, useState, useContext, useEffect } from "react"; 
 //createContext es una funcion GLOBAL de react no le cambies el nombre 
-import {registroA, registroSecretarias, loginSecretari, registroFamiliares} from '../api/autenticacion'
+import {registroA, registroSecretarias, loginSecretari, registroFamiliares, verificarToken} from '../api/autenticacion'
+import Cookies from 'js-cookie'
 
 export const ValidarContexto= createContext();
 
@@ -20,6 +21,7 @@ export const AuthProvider= ({children}) =>{
     const [user, setUser]= useState(null);
     const [autenticado, setAutenticado]= useState(false);
     const [errors, setErrors]= useState([]);
+    const [loading, setLoading]= useState(true);
 
     const signup= async(user)=>{
         try{
@@ -49,10 +51,15 @@ export const AuthProvider= ({children}) =>{
     const sesionSecretaria= async(user)=>{
         try{
             const res= await loginSecretari(user)
-            console.log(res);
+            console.log(res)
+            setAutenticado(true)
+           setUser(res.data)
         }
         catch(error){
-            console.log(error);
+            if(Array.isArray(error.response.data)){
+                return setErrors(error.response.data)
+            }
+          setErrors([error.response.data.message])
         }
     }
 
@@ -69,12 +76,45 @@ export const AuthProvider= ({children}) =>{
         }
     };
 
+    useEffect(()=>{
+      async function checkLogin(){
+      const cookies= Cookies.get();
+
+      if(!cookies.token){
+        setAutenticado(false);
+        setLoading(false);
+       return setUser(null);
+    
+      }
+        try{
+     const res= await verificarToken(cookies.token);
+     if(!res.data)  {
+     setAutenticado(false);
+     setLoading(false);
+     return;
+     }
+    setAutenticado(true);
+    setUser(res.data);
+    setLoading(false);
+        }
+        catch(error){
+            console.log(error);
+            setAutenticado(false);
+            setUser(null);
+            setLoading(false);
+        }
+      
+    }
+    checkLogin();
+    }, []);
+
     return(
         <ValidarContexto.Provider value={{
             signup,
             signupSecretaria,
             sesionSecretaria,
             signupFamiliar,
+            loading,
             user,
             autenticado,
             errors
